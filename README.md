@@ -18,6 +18,7 @@ Install
 * create a virtual python environment
 
   `pip install virtualenv`
+  
   `python -m virtualenv .virtualenv`
 
 * install dependencies
