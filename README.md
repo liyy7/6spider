@@ -10,14 +10,15 @@ Overview
 Requirements
 ============
 
-* Python 3.4.3
+* Python 2.7.9
 
 Install
 =======
 
 * create a virtual python environment
 
-  `python -m venv .env`
+  `pip install virtualenv`
+  `python -m virtualenv .virtualenv`
 
 * install dependencies
 
