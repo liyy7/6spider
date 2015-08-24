@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-class SixspiderPipeline(object):
+class ElasticsearchPipeline(object):
     def process_item(self, item, spider):
+        # TODO: send to elasticsearch
         return item

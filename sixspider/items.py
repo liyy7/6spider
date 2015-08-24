@@ -8,7 +8,6 @@
 import scrapy
 
 
-class SixspiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+class JobPostingItem(scrapy.Item):
+    name = scrapy.Field()
     pass
