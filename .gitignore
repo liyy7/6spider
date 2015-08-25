@@ -1,6 +1,8 @@
 *.pyc
 __pycache__
 .virtualenv
+build
+project.egg-info
 
 # IDE
 .idea

@@ -6,8 +6,11 @@
 # http://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy.loader.processors import TakeFirst
 
 
 class JobPostingItem(scrapy.Item):
-    name = scrapy.Field()
-    pass
+    provider = scrapy.Field()
+    description = scrapy.Field(
+        output_processor=TakeFirst()
+    )
