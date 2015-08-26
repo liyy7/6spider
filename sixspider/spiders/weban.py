@@ -12,7 +12,7 @@ class WebanSpider(scrapy.Spider):
         '?CMD=300&FID=300&A1=03&AX=1&V1=05&V2=1&V13=40&Z1=014&V3=50&V5=1&V24=0',
     )
     next_page_xpath = '//*[@id="pagerTopList"]//li[@class="paging_next"]/a/@href'
-    detail_page_xpath = u'//*[@id="mainContents"]//img[@alt="詳細を見る"]/../@href'
+    detail_page_xpath = u'//*[@id="mainContents"]//a[img[@alt="詳細を見る"]]/@href'
 
     def parse(self, response):
         # find all detail pages
