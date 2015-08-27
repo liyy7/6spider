@@ -2,6 +2,9 @@
 6Spider
 =======
 
+[![Circle CI](https://circleci.com/gh/liyy7/6spider.svg?style=svg)](https://circleci.com/gh/liyy7/6spider)
+[![Coverage Status](https://coveralls.io/repos/liyy7/6spider/badge.svg?branch=master&service=github)](https://coveralls.io/github/liyy7/6spider?branch=master)
+
 Overview
 ========
 
