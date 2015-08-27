@@ -28,6 +28,7 @@ class WebanSpider(scrapy.Spider):
     def parse_detail_page(self, response):
         item_loader = ItemLoader(item=JobPostingItem(), response=response)
         item_loader.add_value('provider', self.name)
+        item_loader.add_value('url', response.url)
         # TODO: parse detail page
         item_loader.add_xpath('description', u'//*[@id="mainContents"]//tr[th[.="仕事内容"]]/td/p')
         return item_loader.load_item()

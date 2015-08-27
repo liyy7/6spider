@@ -5,32 +5,43 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-from datetime import datetime
+import datetime
+import hashlib
 
 import scrapy
-from scrapy.loader.processors import TakeFirst, MapCompose
+from scrapy.loader.processors import TakeFirst, Compose
+
+
+def _generate_id(values, loader_context):
+    """hash `values` to generate and set `id` field"""
+    item = loader_context['item']
+    item['id'] = hashlib.sha1(''.join(str(v) for v in values)).hexdigest()
+    return values
+
+
+def _created_at_processor(values, loader_context):
+    """accept datetime/int/float types as `created_at` field"""
+    if values:
+        first = values[0]
+        if isinstance(first, datetime.datetime):
+            return first
+        elif isinstance(first, (int, float)):
+            return datetime.datetime.fromtimestamp(first)
+    item = loader_context['item']
+    return item['created_at']
 
 
 class JobPostingItem(scrapy.Item):
-
-    # re considerate this approach
-    @staticmethod
-    def _generate_id(urls):
-        # TODO: generate id
-        # self['id'] = 'ID'
-        return urls
-
     id = scrapy.Field()
     provider = scrapy.Field(
-        output_processor=TakeFirst()
-    )
-    url = scrapy.Field(
-        # output_processor=MapCompose(_generate_id, TakeFirst())
-        output_processor=MapCompose(TakeFirst())
-    )
-    description = scrapy.Field(
-        output_processor=TakeFirst()
-    )
+        output_processor=TakeFirst())
     created_at = scrapy.Field(
-        output_processor=lambda: datetime.now()
-    )
+        output_processor=_created_at_processor)
+    url = scrapy.Field(
+        output_processor=Compose(_generate_id, TakeFirst()))
+    description = scrapy.Field(
+        output_processor=TakeFirst())
+
+    def __init__(self):
+        super(JobPostingItem, self).__init__(
+            created_at=datetime.datetime.now())

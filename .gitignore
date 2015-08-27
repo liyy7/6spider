@@ -3,6 +3,8 @@ __pycache__
 .virtualenv
 build
 project.egg-info
+htmlcov
+.coverage
 
 # IDE
 .idea
