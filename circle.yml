@@ -1,4 +1,6 @@
 machine:
+  timezone:
+    Asia/Tokyo
   python:
     version: 2.7.9
   pre:
