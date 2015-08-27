@@ -1,8 +1,11 @@
 Scrapy
 # development
+ipython
 flake8
 # test
 pytest
 pytest-cov
 mock
 coveralls
+vcrpy
+requests

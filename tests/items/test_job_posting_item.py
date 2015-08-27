@@ -1,10 +1,9 @@
 import datetime
 import hashlib
-
 import unittest
+
 import mock
 from scrapy.loader import ItemLoader
-
 from sixspider.items import JobPostingItem
 
 datetime.datetime = type('MockDatetime', (datetime.datetime,), {})
@@ -21,7 +20,7 @@ class JobPostingItemTest(unittest.TestCase):
 
     def test_fields(self):
         item = JobPostingItem()
-        self.assertEqual(set(item.fields), set('url created_at provider id description'.split(' ')))
+        self.assertSetEqual(set(item.fields), set('url created_at provider id description'.split(' ')))
 
     @mock.patch('hashlib.sha1')
     def test_id_field(self, *_):
