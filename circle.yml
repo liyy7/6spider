@@ -1,6 +1,8 @@
 machine:
   python:
     version: 2.7.9
+  pre:
+    - pip install --upgrade pip
 
 test:
   post:
