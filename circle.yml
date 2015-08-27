@@ -3,8 +3,11 @@ machine:
     Asia/Tokyo
   python:
     version: 2.7.9
+
+dependencies:
   pre:
-    - sudo pip install --upgrade pip
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
 
 test:
   post:
