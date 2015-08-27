@@ -26,6 +26,12 @@ Install
 
 * install dependencies
 
-  `pip install -r stable-requirements.txt`
+  `pip install -r requirements.txt`
+
+* test
+
+  `py.test ./tests`
 
 * execute
+
+  `scrapy crawl weban`
