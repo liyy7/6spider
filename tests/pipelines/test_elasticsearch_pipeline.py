@@ -2,6 +2,7 @@ import unittest
 
 from sixspider.pipelines import ElasticsearchPipeline
 
+
 class TestElasticsearchPipeline(unittest.TestCase):
     def test_process_item(self):
         pipeline = ElasticsearchPipeline()
