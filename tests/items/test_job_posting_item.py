@@ -4,6 +4,7 @@ import unittest
 
 import mock
 from scrapy.loader import ItemLoader
+
 from sixspider.items import JobPostingItem
 
 datetime.datetime = type('MockDatetime', (datetime.datetime,), {})

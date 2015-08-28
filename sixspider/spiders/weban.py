@@ -11,12 +11,16 @@ class WebanSpider(scrapy.Spider):
         'http://weban.jp/webapp/gen/list/itemSearchList/'
         '?CMD=300&FID=300&A1=03&AX=1&V1=05&V2=1&V13=40&Z1=014&V3=50&V5=1&V24=0',
     )
-    # 400 milliseconds delay (0.5 * 0.4 < delay < 1.5 * 0.4)
-    download_delay = 0.4
+    # 100 ~ 300 milliseconds download delay (0.5 * 0.2 < delay < 1.5 * 0.2)
+    download_delay = 0.2
     next_page_xpath = '//*[@id="pagerTopList"]//li[@class="paging_next"]/a/@href'
     detail_page_xpath = u'//*[@id="mainContents"]//a[img[@alt="詳細を見る"]]/@href'
 
-    # TODO: http://stackoverflow.com/questions/28640102/retrying-a-scrapy-request-even-when-receiving-a-200-status-code
+    # called by ValidateResponseDownloaderMiddleware
+    def is_valid_response(self, response):
+        # `response.body` has to longer than 20000 bytes
+        return len(response.body) >= 20000
+
     def parse(self, response):
         # find all detail pages
         for detail_page_url in response.xpath(self.detail_page_xpath).extract():
