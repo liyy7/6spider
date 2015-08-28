@@ -2,6 +2,7 @@ Scrapy
 # development
 ipython
 flake8
+shub
 # test
 pytest
 pytest-cov

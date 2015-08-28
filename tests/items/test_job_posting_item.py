@@ -21,7 +21,10 @@ class JobPostingItemTest(unittest.TestCase):
 
     def test_fields(self):
         item = JobPostingItem()
-        self.assertSetEqual(set(item.fields), set('url created_at provider id description'.split(' ')))
+        self.assertSetEqual(set(item.fields), set('salary application_charge_person application_qualification work_term'
+                                                  ' application_side company treatment id work_place company_url'
+                                                  ' application_tel application_method company_location company_service'
+                                                  ' provider url work_hour holiday created_at description'.split(' ')))
 
     @mock.patch('hashlib.sha1')
     def test_id_field(self, *_):

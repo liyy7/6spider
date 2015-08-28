@@ -34,6 +34,24 @@ class WebanSpider(scrapy.Spider):
         item_loader = ItemLoader(item=JobPostingItem(), response=response)
         item_loader.add_value('provider', self.name)
         item_loader.add_value('url', response.url)
-        # TODO: parse detail page
-        item_loader.add_xpath('description', u'//*[@id="mainContents"]//tr[th[.="仕事内容"]]/td/p')
+        fields_dict = {
+            'description': u'仕事内容',
+            'work_term': u'勤務期間',
+            'work_hour': u'勤務時間',
+            'salary': u'給与',
+            'holiday': u'休日・休暇',
+            'treatment': u'待遇',
+            'work_place': u'勤務地',
+            'application_qualification': u'応募資格',
+            'application_method': u'応募方法',
+            'application_side': u'応募先',
+            'application_tel': u'応募先電話番号',
+            'application_charge_person': u'担当',
+            'company': u'会社名',
+            'company_service': u'事業内容',
+            'company_location': u'所在地',
+            'company_url': u'関連URL'
+        }
+        for field, keyword in fields_dict.items():
+            item_loader.add_xpath(field, u'//*[@id="mainContents"]//tr[th[.="{}"]]/td/node()'.format(keyword))
         return item_loader.load_item()

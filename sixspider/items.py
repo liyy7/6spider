@@ -9,7 +9,7 @@ import datetime
 import hashlib
 
 import scrapy
-from scrapy.loader.processors import TakeFirst, Compose
+from scrapy.loader.processors import TakeFirst, Compose, Join
 
 
 def _generate_id(values, loader_context):
@@ -33,14 +33,25 @@ def _created_at_processor(values, loader_context):
 
 class JobPostingItem(scrapy.Item):
     id = scrapy.Field()
-    provider = scrapy.Field(
-        output_processor=TakeFirst())
-    created_at = scrapy.Field(
-        output_processor=_created_at_processor)
-    url = scrapy.Field(
-        output_processor=Compose(_generate_id, TakeFirst()))
-    description = scrapy.Field(
-        output_processor=TakeFirst())
+    created_at = scrapy.Field(output_processor=_created_at_processor)
+    provider = scrapy.Field(output_processor=TakeFirst())
+    url = scrapy.Field(output_processor=Compose(_generate_id, TakeFirst()))
+    description = scrapy.Field(output_processor=Join())
+    work_term = scrapy.Field(output_processor=Join())
+    work_hour = scrapy.Field(output_processor=Join())
+    salary = scrapy.Field(output_processor=Join())
+    holiday = scrapy.Field(output_processor=Join())
+    treatment = scrapy.Field(output_processor=Join())
+    work_place = scrapy.Field(output_processor=Join())
+    application_qualification = scrapy.Field(output_processor=Join())
+    application_method = scrapy.Field(output_processor=Join())
+    application_side = scrapy.Field(output_processor=Join())
+    application_tel = scrapy.Field(output_processor=Join())
+    application_charge_person = scrapy.Field(output_processor=Join())
+    company = scrapy.Field(output_processor=Join())
+    company_service = scrapy.Field(output_processor=Join())
+    company_location = scrapy.Field(output_processor=Join())
+    company_url = scrapy.Field(output_processor=Join())
 
     def __init__(self):
         super(JobPostingItem, self).__init__(
