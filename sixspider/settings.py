@@ -49,10 +49,9 @@ NEWSPIDER_MODULE = 'sixspider.spiders'
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    # `validate` needs to be called before `retry` 'scrapy.downloadermiddlewares.retry.RetryMiddleware': 500,
-    'sixspider.middlewares.ValidateResponseDownloaderMiddleware': 501,
-}
+#DOWNLOADER_MIDDLEWARES = {
+#    'sixspider.middlewares.MyCustomDownloaderMiddleware': 543,
+#}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
