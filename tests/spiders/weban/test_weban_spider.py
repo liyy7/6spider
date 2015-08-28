@@ -5,7 +5,6 @@ import vcr
 import requests
 from scrapy.http.request import Request
 from scrapy.http.response.html import HtmlResponse
-
 from sixspider.spiders.weban import WebanSpider
 from sixspider.items import JobPostingItem
 
@@ -33,9 +32,29 @@ class WebanSpiderTest(unittest.TestCase):
         for request in self.next_page_requests + self.detail_page_requests:
             self.assertIsInstance(request, Request)
 
+    @mock.patch.object(WebanSpider, 'is_valid_response')
+    @mock.patch.object(WebanSpider, 'retry')
+    def test_parse_invalid(self, *args):
+        self.spider.is_valid_response.return_value = False
+        ret = mock.MagicMock()
+        self.spider.retry.return_value = ret
+        response = mock.MagicMock()
+        expected = self.spider.parse(response)
+        self.assertIn(ret, expected)
+
     def test_parse_detail_page(self):
         expected = self.spider.parse_detail_page(self.detail_page_response)
         self.assertIsInstance(expected, JobPostingItem)
+
+    @mock.patch.object(WebanSpider, 'is_valid_response')
+    @mock.patch.object(WebanSpider, 'retry')
+    def test_parse_detail_page_invalid(self, *args):
+        self.spider.is_valid_response.return_value = False
+        ret = mock.MagicMock()
+        self.spider.retry.return_value = ret
+        response = mock.MagicMock()
+        expected = self.spider.parse_detail_page(response)
+        self.assertIs(ret, expected)
 
     def test_is_valid_response(self):
         response = mock.MagicMock()
@@ -51,3 +70,17 @@ class WebanSpiderTest(unittest.TestCase):
         response.body.__len__.return_value = 40000
         expected = self.spider.is_valid_response(response)
         self.assertTrue(expected)
+
+    def test_retry(self):
+        url = 'http://example.com'
+        request = Request(url=url)
+        response = HtmlResponse(url=url, request=request)
+        # retry returns Request with the same url for max_retry_times
+        for i in range(WebanSpider.max_retry_times):
+            request = self.spider.retry(response)
+            self.assertIsInstance(request, Request)
+            self.assertEqual(request.url, url)
+            response = HtmlResponse(url=url, request=request)
+        # retry returns None after max_retry_times
+        request = self.spider.retry(response)
+        self.assertIsNone(request)

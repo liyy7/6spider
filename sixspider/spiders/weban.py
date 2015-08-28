@@ -13,24 +13,46 @@ class WebanSpider(scrapy.Spider):
     )
     # 100 ~ 300 milliseconds download delay (0.5 * 0.2 < delay < 1.5 * 0.2)
     download_delay = 0.2
+    minimum_response_body_length = 20000
+    max_retry_times = 3
     next_page_xpath = '//*[@id="pagerTopList"]//li[@class="paging_next"]/a/@href'
     detail_page_xpath = u'//*[@id="mainContents"]//a[img[@alt="詳細を見る"]]/@href'
 
-    # called by ValidateResponseDownloaderMiddleware
+    def retry(self, response):
+        retries = response.request.meta.get('retry_times', 0) + 1
+        if retries <= self.max_retry_times:
+            self.logger.debug('Retrying %(request)s (failed %(retries)d times): %(body_length)s bytes',
+                              {'request': response.request, 'retries': retries, 'body_length': len(response.body)})
+            retryreq = response.request.copy()
+            retryreq.meta['retry_times'] = retries
+            retryreq.dont_filter = True
+            retryreq.priority -= 1
+            return retryreq
+        else:
+            self.logger.error('Gave up retrying %(request)s (failed %(retries)d times): %(body_length)s bytes',
+                              {'request': response.request, 'retries': retries, 'body_length': len(response.body)})
+
     def is_valid_response(self, response):
-        # `response.body` has to longer than 20000 bytes
-        return len(response.body) >= 20000
+        return len(response.body) >= self.minimum_response_body_length
 
     def parse(self, response):
-        # find all detail pages
-        for detail_page_url in response.xpath(self.detail_page_xpath).extract():
-            yield scrapy.Request(response.urljoin(detail_page_url), callback=self.parse_detail_page)
-        # find next page url
-        next_page_url = response.xpath(self.next_page_xpath).extract_first()
-        if next_page_url:
-            yield scrapy.Request(response.urljoin(next_page_url))
+        # validate response
+        if not self.is_valid_response(response):
+            yield self.retry(response)
+        else:
+            # find all detail pages
+            for detail_page_url in response.xpath(self.detail_page_xpath).extract():
+                yield scrapy.Request(response.urljoin(detail_page_url), callback=self.parse_detail_page)
+            # find next page url
+            next_page_url = response.xpath(self.next_page_xpath).extract_first()
+            if next_page_url:
+                yield scrapy.Request(response.urljoin(next_page_url))
 
     def parse_detail_page(self, response):
+        # validate response
+        if not self.is_valid_response(response):
+            return self.retry(response)
+
         item_loader = ItemLoader(item=JobPostingItem(), response=response)
         item_loader.add_value('provider', self.name)
         item_loader.add_value('url', response.url)
