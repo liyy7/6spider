@@ -1,4 +1,5 @@
 import unittest
+import time
 
 import mock
 import vcr
@@ -71,13 +72,15 @@ class WebanSpiderTest(unittest.TestCase):
         expected = self.spider.is_valid_response(response)
         self.assertTrue(expected)
 
-    def test_retry(self):
+    @mock.patch('time.sleep')
+    def test_retry(self, *args):
         url = 'http://example.com'
         request = Request(url=url)
         response = HtmlResponse(url=url, request=request)
         # retry returns Request with the same url for max_retry_times
         for i in range(WebanSpider.max_retry_times):
             request = self.spider.retry(response)
+            time.sleep.assert_called_with(2)
             self.assertIsInstance(request, Request)
             self.assertEqual(request.url, url)
             response = HtmlResponse(url=url, request=request)

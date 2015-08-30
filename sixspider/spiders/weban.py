@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+
 import scrapy
 from scrapy.loader import ItemLoader
 from sixspider.items import JobPostingItem
@@ -21,6 +23,8 @@ class WebanSpider(scrapy.Spider):
     def retry(self, response):
         retries = response.request.meta.get('retry_times', 0) + 1
         if retries <= self.max_retry_times:
+            # sleep 2 seconds before sending retry request
+            time.sleep(2)
             self.logger.debug('Retrying %(request)s (failed %(retries)d times): %(body_length)s bytes',
                               {'request': response.request, 'retries': retries, 'body_length': len(response.body)})
             retryreq = response.request.copy()
