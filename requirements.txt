@@ -1,4 +1,5 @@
 Scrapy
+elasticsearch-dsl
 # development
 ipython
 flake8
