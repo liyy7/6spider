@@ -2,7 +2,8 @@
 __pycache__
 .virtualenv
 build
-sixspider.egg-info
+*.egg-info
+*.egg
 htmlcov
 .coverage
 
