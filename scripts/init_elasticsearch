@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+if __name__ == '__main__':
+    import os
+    import sys
+    import logging
+
+    logging.basicConfig()
+    logging.getLogger('elasticsearch').setLevel(logging.DEBUG)
+
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+    import sixspider.elasticsearch
+
+    sixspider.elasticsearch.create_index('job_postings', force=True)
